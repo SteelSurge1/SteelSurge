@@ -12,6 +12,489 @@
   <link rel="stylesheet" href="css/themes.css">
   <link rel="stylesheet" href="css/animations.css">
   <!-- End External CSS -->
+  <!-- Inline styles that will be moved to appropriate CSS files in next steps -->
+  <style>
+    /* Navigation styles that will be moved to components/header.css in next step */
+    nav {
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 4px 20px -5px rgba(56, 189, 248, 0.3);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+      pointer-events: auto;
+    }
+    
+    nav h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-shadow: 0 0 10px var(--primary-glow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    nav h1::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      animation: navGlow 3s infinite;
+    }
+    
+    nav .links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    nav .links a {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      text-decoration: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    nav .links a::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
+    }
+    
+    nav .links a:hover {
+      color: var(--primary);
+      text-shadow: 0 0 8px var(--primary-glow);
+    }
+    
+    nav .links a:hover::before {
+      width: 80%;
+    }
+    
+    /* Content section styles that will be moved to components/sections.css in next step */
+    .content {
+      padding-top: 7rem;
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+      max-width: 80rem;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+    
+    .content section {
+      background: linear-gradient(120deg, rgba(17,24,39,0.92) 60%, rgba(56,189,248,0.07) 100%);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px 0 rgba(56,189,248,0.10), 0 1.5px 8px 0 rgba(124,58,237,0.08);
+      padding: 2.5rem 2rem 2.5rem 2rem;
+      margin-bottom: 0;
+      border: 1.5px solid rgba(56,189,248,0.13);
+      transition: box-shadow 0.3s, border 0.3s;
+      display: none !important;
+    }
+    
+    .content section.active-section {
+      display: block !important;
+      animation: fadeInUp 0.8s cubic-bezier(0.23,1,0.32,1) both;
+    }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      margin-top: 0.5rem;
+      border-bottom: 1.5px solid rgba(56,189,248,0.13);
+      padding-bottom: 1.2rem;
+    }
+    
+    section h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 1.5px;
+      margin-bottom: 0;
+      text-shadow: 0 0 12px var(--primary-glow);
+    }
+    
+    section h2::after {
+      content: '';
+      display: block;
+      margin-top: 0.7rem;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 3px;
+    }
+    
+    .card {
+      background: linear-gradient(120deg, var(--card-bg) 80%, var(--primary-glow) 100%);
+      border-radius: 1.2rem;
+      box-shadow: 0 4px 24px 0 rgba(56,189,248,0.10), 0 1.5px 8px 0 rgba(124,58,237,0.08);
+      border: 1.5px solid rgba(56,189,248,0.13);
+      padding: 2rem 1.5rem;
+      margin-bottom: 0;
+      transition: box-shadow 0.3s, border 0.3s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+    
+    .card:hover {
+      box-shadow: 0 8px 32px 0 rgba(56,189,248,0.18), 0 1.5px 8px 0 rgba(124,58,237,0.13);
+      border-color: var(--primary);
+      transform: translateY(-4px) scale(1.012);
+    }
+    
+    .card h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 8px var(--primary-glow);
+    }
+    
+    .card p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 1.08rem;
+    }
+    
+    .card button, .back-btn, .achievement-card {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border-radius: 0.7rem;
+      box-shadow: 0 2px 8px var(--primary-glow);
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    
+    .card button:hover, .back-btn:hover {
+      background: var(--primary-dark);
+      color: #fff;
+      box-shadow: 0 4px 16px var(--primary-glow);
+      transform: scale(1.04);
+    }
+    
+    .grid, .sponsors-grid {
+      display: grid;
+      gap: 2.2rem;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      margin-bottom: 0;
+    }
+    
+    .sponsors-grid {
+      gap: 1.5rem;
+    }
+    
+    .achievement-card {
+      background: linear-gradient(90deg, rgba(56,189,248,0.10), rgba(124,58,237,0.10));
+      border: 2px solid #334155;
+      border-radius: 1rem;
+      padding: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      opacity: 0.95;
+      margin-bottom: 0.7rem;
+      font-size: 1.1rem;
+    }
+    
+    .achievement-card[style*='rgba(56,189,248,0.15)'] {
+      border: 2px solid #38bdf8;
+      opacity: 1;
+    }
+    
+    /* Responsive tweaks */
+    @media (max-width: 900px) {
+      .content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .grid, .sponsors-grid {
+        grid-template-columns: 1fr;
+      }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.7rem;
+      }
+    }
+    
+    .lightning-overlay {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+      overflow: hidden;
+    }
+    
+    .lightning-bolt {
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      filter: brightness(1.10) contrast(1.05); /* less intense */
+      mix-blend-mode: screen;
+      will-change: opacity, filter;
+    }
+    
+    .bolt-1 {
+      background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNjUsMTAgTDIwLDkwIEwzNSw1MCBMMTUsNTUgTDYwLDEwIEw0NSw1MCBMODUsNDUgTDY1LDEwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==') no-repeat center center;
+      animation: flashBolt 18s infinite;
+      animation-delay: 2s;
+    }
+    
+    .bolt-2 {
+      background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNDAsMTUgTDg1LDkwIEw2MCw1MCBMODAsNDUgTDM1LDEwIEw2MCw2MCBMMjAsNDUgTDQwLDE1IFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==') no-repeat center center;
+      animation: flashBolt 22s infinite;
+      animation-delay: 7s;
+    }
+    
+    .lightning-effect {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(30, 58, 138, 0.03), rgba(59, 130, 246, 0.06), transparent);
+      animation: ambientGlow 14s infinite alternate;
+      mix-blend-mode: screen;
+    }
+    
+    @keyframes ambientGlow {
+      0%, 100% { opacity: 0.13; background-position: 0% 50%; }
+      50% { opacity: 0.22; background-position: 100% 50%; }
+    }
+    
+    @keyframes flashBolt {
+      0%, 97% { opacity: 0; filter: brightness(1.10) blur(0px); }
+      98%, 98.5% { opacity: 0.25; filter: brightness(1.13) blur(0.5px); }
+      98.6%, 99% { opacity: 0.15; filter: brightness(1.08) blur(1px); }
+      99.1%, 100% { opacity: 0; filter: brightness(1.05) blur(1.5px); }
+    }
+    
+    .card {
+      background-color: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 0.75rem;
+      box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(56, 189, 248, 0.2);
+      transition: all 0.4s ease;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: all 0.7s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 15px rgba(56, 189, 248, 0.4);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    
+    .card:hover::after {
+      left: 100%;
+    }
+    
+    .card h3 {
+      font-size: 1.35rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .card h3::before {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: var(--primary);
+    }
+    
+    .card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    
+    .home-section, .about-section, .sponsors-section, .media-section, .blog-section {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .active-section {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    section h2 {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+    
+    section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+    
+    .robot-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    
+    .robot {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+      filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.5));
+      transition: transform 10s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .sponsors-grid img {
+      filter: grayscale(80%);
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+    
+    .sponsors-grid img:hover {
+      filter: grayscale(0%);
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      nav .links {
+        gap: 0.5rem;
+      }
+      nav .links a {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.5rem;
+      }
+      #nav-links {
+        max-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    @media (min-width: 769px) {
+      #nav-links {
+        max-height: none !important;
+        overflow: visible !important;
+        display: flex !important;
+        flex-direction: row !important;
+      }
+    }
+    /* Accessibility Toolbar - always top right, above all content, visible in all themes */
+    #accessibility-toolbar {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      z-index: 99999;
+      background: var(--nav-bg, #222);
+      border: 2px solid var(--primary, #38bdf8);
+      border-radius: 1.5rem 0 0 1.5rem;
+      padding: 0.7rem 1.2rem 0.7rem 1.4rem;
+      box-shadow: 0 2px 8px var(--primary-glow, #38bdf8);
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      min-width: 160px;
+      max-width: 90vw;
+      color: var(--text-primary, #fff);
+      margin-right: 0;
+    }
+    #accessibility-toolbar button {
+      color: var(--text-primary, #fff);
+    }
+    @media (max-width: 600px) {
+      #accessibility-toolbar {
+        top: 60%;
+        right: 0;
+        transform: translateY(-50%);
+        padding: 0.5rem 0.7rem 0.5rem 1rem;
+        font-size: 0.95rem;
+        min-width: 120px;
+      }
+    }
+  </style>
 </head>
 <body>
   <noscript><div style="background:#f87171;color:#fff;padding:1rem;text-align:center;font-size:1.2rem;z-index:99999;position:fixed;top:0;left:0;width:100vw;">This site requires JavaScript to function properly. Please enable JavaScript in your browser.</div></noscript>
@@ -37,7 +520,8 @@
       <a href="#" data-section="blog">Blog</a>
       <a href="#" data-section="games">Games</a>
       <a href="#" data-section="achievements">Achievements</a>
-      <!-- <a href="#" data-section="mentors">Mentors</a> -->
+      <a href="#" data-section="strategy">Strategy</a>
+      <a href="#" data-section="mentors">Mentors</a>
       <a href="#" data-section="dashboard">Team Info</a>
     </div>
   </nav>
@@ -106,20 +590,20 @@
           </div>
         </div>
 
-      <!-- Nikhil Kaza -->
+        <!-- Nikhil Kaza -->
         <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50 hover:border-sky-500/50 transition-all duration-300 flex flex-col">
           <div class="w-32 h-32 mx-auto mb-4 overflow-hidden rounded-full border-2 border-sky-500/50">
             <img src="static/nikhilkaza.jpeg" alt="Nikhil Kaza" class="w-full h-full object-cover">
           </div>
           <h3 class="text-xl font-bold text-sky-400 mb-2 text-center">Nikhil Kaza</h3>
           <p class="text-purple-400 font-medium mb-4">Mechanical Department: Head of CAD</p>
-          <p class="text-gray-300 mb-4">I am a 10th grader at Unionville High School. I am very passionate about STEM programs and education in general. I work as a mechanical (a head of CAD) and assist with other aspects of the team.</p>
+          <p class="text-gray-300 mb-4">I am a 9th grader at Unionville High School. I am very passionate about STEM programs and education in general. I work as a mechanical (a head of CAD) and assist with other aspects of the team.</p>
           <div class="mt-4 pt-4 border-t border-gray-700/50">
             <div class="space-y-2">
               <p class="text-sm text-gray-400">📧 <a href="mailto:nikoftime2020@outlook.com" class="text-sky-400 hover:underline">nikoftime2020@outlook.com</a></p>
               <p class="text-sm text-gray-400">📞 <a href="tel:4847909539" class="text-sky-400 hover:underline">(484) 790-9539</a></p>
-        </div>
-      </div>
+            </div>
+          </div>
         </div>
         <!-- Ethan Harris -->
         <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50 hover:border-sky-500/50 transition-all duration-300 flex flex-col">
@@ -128,7 +612,7 @@
           </div>
           <h3 class="text-xl font-bold text-sky-400 mb-2 text-center">Ethan Harris</h3>
           <p class="text-purple-400 font-medium mb-4">Mechanical Engineering & Outreach</p>
-          <p class="text-gray-300 mb-4">I'm a new member of the team with previous experience. Currently I'm in 10th grade. Here on the team I use my experience in mechanical engineering and outreach but I'm up for trying anything. I wish to gain more experience building more complex builds with Steel Surge.</p>
+          <p class="text-gray-300 mb-4">I'm a new member of the team with previous experience. Currently I'm in 9th grade. Here on the team I use my experience in mechanical engineering and outreach but I'm up for trying anything. I wish to gain more experience building more complex builds with Steel Surge.</p>
           <div class="mt-4 pt-4 border-t border-gray-700/50">
             <div class="space-y-2">
               <p class="text-sm text-gray-400">📧 <a href="mailto:Ethanjaiharris@outlook.com" class="text-sky-400 hover:underline">Ethanjaiharris@outlook.com</a></p>
@@ -144,7 +628,7 @@
           </div>
           <h3 class="text-xl font-bold text-sky-400 mb-2 text-center">Nathan Thomas</h3>
           <p class="text-purple-400 font-medium mb-4">Head of Programming</p>
-          <p class="text-gray-300 mb-4">I'm Nathan Thomas, Head of Programming at Steel Surge. I'm in 10th grade currently, and am studying at Unionville High School. This season will be my second year at Steel Surge.</p>
+          <p class="text-gray-300 mb-4">I'm Nathan Thomas, Head of Programming at Steel Surge. I'm in 9th grade currently, and am studying at Unionville High School. This season will be my second year at Steel Surge.</p>
           <div class="mt-4 pt-4 border-t border-gray-700/50">
             <div class="space-y-2">
               <p class="text-sm text-gray-400">📧 <a href="mailto:thomasn28@ucfsd.net" class="text-sky-400 hover:underline">thomasn28@ucfsd.net</a></p>
@@ -153,14 +637,14 @@
           </div>
         </div>
 
-      <!-- Thomas Binder -->
+        <!-- Thomas Binder -->
         <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50 hover:border-sky-500/50 transition-all duration-300 flex flex-col">
           <div class="w-32 h-32 mx-auto mb-4 overflow-hidden rounded-full border-2 border-sky-500/50">
             <img src="static/thomasbinder.jpeg" alt="Thomas Binder" class="w-full h-full object-cover">
           </div>
           <h3 class="text-xl font-bold text-sky-400 mb-2 text-center">Thomas Binder</h3>
           <p class="text-purple-400 font-medium mb-4">Mechanical Department: Assistant CAD Designer</p>
-          <p class="text-gray-300 mb-4">I am a 10th grader from Unionville High school and I joined Steel Surge fairly recently. I assist members on the team in CAD, outreach, and programming. I help do things all around the team.</p>
+          <p class="text-gray-300 mb-4">I am a 9th grader from Unionville High school and I joined Steel Surge fairly recently. I assist members on the team in CAD, outreach, and programming. I help do things all around the team.</p>
           <div class="mt-4 pt-4 border-t border-gray-700/50">
             <div class="space-y-2">
               <p class="text-sm text-gray-400">📧 <a href="mailto:bindert28@ucfsd.net" class="text-sky-400 hover:underline">bindert28@ucfsd.net</a></p>
@@ -176,7 +660,7 @@
           </div>
           <h3 class="text-xl font-bold text-sky-400 mb-2 text-center">Rithwik Aluru</h3>
           <p class="text-purple-400 font-medium mb-4">Outreach</p>
-          <p class="text-gray-300 mb-4">I am in 10th grade and I go to Unionville High School. I just recently joined Steel Surge and I am a new member of the team. I am currently helping with outreach, which involves finding sponsors to support us. I plan to help out with building the robot in the future.</p>
+          <p class="text-gray-300 mb-4">I am in 9th grade and I go to Unionville High School. I just recently joined Steel Surge and I am a new member of the team. I am currently helping with outreach, which involves finding sponsors to support us. I plan to help out with building the robot in the future.</p>
           <div class="mt-4 pt-4 border-t border-gray-700/50">
             <div class="space-y-2">
               <p class="text-sm text-gray-400">📧 <a href="mailto:alurur28@ucfsd.net" class="text-sky-400 hover:underline">alurur28@ucfsd.net</a></p>
@@ -184,22 +668,8 @@
             </div>
           </div>
         </div>
-
-        <!-- Siru Panchomarthi -->
-        <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50 hover:border-sky-500/50 transition-all duration-300 flex flex-col">
-          <div class="w-32 h-32 mx-auto mb-4 overflow-hidden rounded-full border-2 border-sky-500/50">
-            <img src="static/sirupanchomarthi.jpeg" alt="Siru Panchomarthi" class="w-full h-full object-cover">
-          </div>
-          <h3 class="text-xl font-bold text-sky-400 mb-2 text-center">Siru Panchomarthi</h3>
-          <p class="text-purple-400 font-medium mb-4">First Driver & Mechanical</p>
-          <p class="text-gray-300 mb-4">I am in eighth grade and I go to Patton Middle School. I just recently joined Steel Surge and I'm a new member of the team. I am the First Driver and also help with the mechanical design and building of our robot. I plan to help out with building the robot in the future.</p>
-          <div class="mt-4 pt-4 border-t border-gray-700/50">
-            <div class="space-y-2">
-              <p class="text-sm text-gray-400">📧 <a href="mailto:panchomarthis30@ucfsd.net" class="text-sky-400 hover:underline">panchomarthis30@ucfsd.net</a></p>
-            </div>
-          </div>
-        </div>
       </div>
+    </section>
 
     </section>
     
@@ -215,41 +685,41 @@
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-10 mb-12">
         <!-- Bronze -->
-        <div class="sponsor-card bronze-card">
-          <h4 class="text-2xl font-extrabold mb-2 tracking-wider">Bronze</h4>
+        <div class="card text-center shadow-lg border border-yellow-700" style="background:linear-gradient(135deg,#cd7f32 80%,#fff8e1 100%);font-weight:900;">
+          <h4 class="text-2xl font-extrabold text-yellow-900 mb-2" style="letter-spacing:1px;">Bronze</h4>
           <div class="text-xl font-extrabold text-yellow-900 mb-2">$500</div>
           <div class="font-bold mb-2">Benefits:</div>
-          <ul class="sponsor-benefits text-black list-disc list-inside mb-4">
+          <ul class="text-black list-disc list-inside mb-4 text-left mx-auto" style="max-width: 220px;font-weight:700;">
             <li>Recognition on social media.</li>
           </ul>
         </div>
         <!-- Silver -->
-        <div class="sponsor-card silver-card">
-          <h4 class="text-2xl font-extrabold mb-2 tracking-wider">Silver</h4>
+        <div class="card text-center shadow-lg border border-gray-400" style="background:linear-gradient(135deg,#c0c0c0 80%,#f8fafc 100%);font-weight:900;">
+          <h4 class="text-2xl font-extrabold text-gray-700 mb-2" style="letter-spacing:1px;">Silver</h4>
           <div class="text-xl font-extrabold text-gray-700 mb-2">$1,000</div>
           <div class="font-bold mb-2">Benefits:</div>
-          <ul class="sponsor-benefits text-black list-disc list-inside mb-4">
+          <ul class="text-black list-disc list-inside mb-4 text-left mx-auto" style="max-width: 220px;font-weight:700;">
             <li>Logo placement on team shirts.</li>
             <li>Recognition on social media.</li>
           </ul>
         </div>
         <!-- Gold -->
-        <div class="sponsor-card gold-card">
-          <h4 class="text-2xl font-extrabold mb-2 tracking-wider">Gold</h4>
+        <div class="card text-center shadow-lg border-2 border-yellow-400" style="background:linear-gradient(135deg,#ffd700 80%,#fffbe6 100%);font-weight:900;">
+          <h4 class="text-2xl font-extrabold text-yellow-700 mb-2" style="letter-spacing:1px;">Gold</h4>
           <div class="text-xl font-extrabold text-yellow-700 mb-2">$5,000</div>
           <div class="font-bold mb-2">Benefits:</div>
-          <ul class="sponsor-benefits text-black list-disc list-inside mb-4">
+          <ul class="text-black list-disc list-inside mb-4 text-left mx-auto" style="max-width: 220px;font-weight:700;">
             <li>Logo placement on team shirts.</li>
             <li>Recognition on social media.</li>
             <li>Shout-out on Website.</li>
           </ul>
         </div>
         <!-- Platinum -->
-        <div class="sponsor-card platinum-card">
-          <h4 class="text-2xl font-extrabold mb-2 tracking-wider">Platinum</h4>
+        <div class="card text-center shadow-lg border-2 border-gray-400" style="background:linear-gradient(135deg,#e5e4e2 80%,#f8fafc 100%);font-weight:900;">
+          <h4 class="text-2xl font-extrabold text-gray-700 mb-2" style="letter-spacing:1px;">Platinum</h4>
           <div class="text-xl font-extrabold text-gray-700 mb-2">$10,000</div>
           <div class="font-bold mb-2">Benefits:</div>
-          <ul class="sponsor-benefits text-black list-disc list-inside mb-4">
+          <ul class="text-black list-disc list-inside mb-4 text-left mx-auto" style="max-width: 220px;font-weight:700;">
             <li>Logo placement on team shirts.</li>
             <li>Recognition on social media and website.</li>
             <li>Company banner at events.</li>
@@ -316,7 +786,7 @@
         <!-- Robot Builder Game Card -->
         <div class="card" style="align-items:center;text-align:center;">
           <div style="font-size:3rem;">
-            <svg width="48" height="48" viewBox="0 0 48 48"><rect x="10" y="20" width="28" height="16" rx="4" fill="#7c3aed" stroke="#fff" stroke-width="2"/><rect x="16" y="8" width="16" height="12" rx="3" fill="#38bdf8" stroke="#fff" stroke-width="2"/><circle cx="16" cy="40" r="10" fill="#1e3a8a" stroke="#fff" stroke-width="1"/><circle cx="32" cy="40" r="10" fill="#1e3a8a" stroke="#fff" stroke-width="1"/></svg>
+            <svg width="48" height="48" viewBox="0 0 48 48"><rect x="10" y="20" width="28" height="16" rx="4" fill="#7c3aed" stroke="#fff" stroke-width="2"/><rect x="16" y="8" width="16" height="12" rx="3" fill="#38bdf8" stroke="#fff" stroke-width="2"/><circle cx="16" cy="40" r="4" fill="#0ea5e9" stroke="#fff" stroke-width="2"/><circle cx="32" cy="40" r="4" fill="#0ea5e9" stroke="#fff" stroke-width="2"/></svg>
           </div>
           <h3>Robot Builder</h3>
           <p>Design and assemble your own robot in this interactive, high-graphic builder game. Share your creation!</p>
@@ -342,6 +812,16 @@
         </label>
       </div>
       <div id="achievements-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6"></div>
+    </section>
+    <section id="strategy" class="strategy-section">
+      <div class="section-header" style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;margin-top:0.5rem;">
+        <button class="back-btn" aria-label="Back to Home" onclick="navigateBack()" tabindex="0" style="background:rgba(30,41,59,0.9);color:#38bdf8;border:none;border-radius:0.7rem;padding:0.5rem 1.2rem;font-size:1rem;box-shadow:0 2px 8px #38bdf8;cursor:pointer;z-index:10;">← Back</button>
+        <h2 class="text-3xl md:text-4xl font-bold text-sky-300" style="margin-bottom:0;">Strategy Simulator</h2>
+      </div>
+      <div class="card">
+        <h3>FTC Game Strategy Simulator</h3>
+        <p>Plan your match strategy! Visualize scoring, test different robot roles, and optimize your alliance's path to victory. (Coming soon!)</p>
+      </div>
     </section>
     <section id="mentors" class="mentors-section">
       <div class="section-header" style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;margin-top:0.5rem;">
@@ -492,7 +972,7 @@
         window.dispatchEvent(evt);
       }
       setInterval(() => {
-      if (Math.random() < 0.1) playThunder();
+      if (Math.random() < 0.3) playThunder();
       }, 12000);
     }
     
@@ -690,8 +1170,6 @@
         robot.style.filter = 'drop-shadow(0 0 40px #38bdf8) brightness(1.3)';
         robot.style.transform = 'scale(1.08) rotate(-3deg)';
         speechBubble.innerHTML = "I'm powered up! ⚡";
-        // Unlock achievement for Surge getting struck by lightning
-        unlockAchievement('zap');
         setTimeout(() => {
           robot.style.filter = '';
           robot.style.transform = '';
@@ -840,16 +1318,13 @@
           unlockAchievement('tenClicks');
         } else {
           changeExpressionRandom();
-          if (window.surgeClickCount === 1) {
-            unlockAchievement('firstClick');
-            unlockAchievement('shocking'); // Unlock Shocking achievement on first tap
-          }
+          if (window.surgeClickCount === 1) unlockAchievement('firstClick');
         }
       });
     }
 
     // Move startPacmanGameHD to global scope
-    window.startPacmanGameHD = function(container) {
+    function startPacmanGameHD(container) {
       // Simple Maze Game with Random Maze Generation
       container.innerHTML = `<canvas id="surge-maze-canvas" tabindex="0" aria-label="Surge Maze Game" style="background:#030711;border-radius:1rem;box-shadow:0 0 24px #38bdf8;width:100%;max-width:600px;max-height:80vw;outline:none;"></canvas>
       <div id="surge-maze-ui" style="color:#fff;text-align:center;margin-top:1rem;"></div>`;
@@ -884,6 +1359,7 @@
           }
         }
         carve(1, 1);
+        // Ensure entrance and exit
         maze[1][1] = 1; // Start
         maze[rows-2][cols-2] = 1; // Exit
         return maze;
@@ -919,6 +1395,7 @@
         ctx.shadowBlur = 8;
         ctx.fill();
         ctx.beginPath(); ctx.arc(-cellSize/5,-cellSize/6,cellSize/8,0,Math.PI*2); ctx.arc(cellSize/5,-cellSize/6,cellSize/8,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+        ctx.beginPath(); ctx.arc(-cellSize/5,-cellSize/7,cellSize/20,0,Math.PI); ctx.arc(cellSize/5,-cellSize/7,cellSize/20,0,Math.PI); ctx.strokeStyle='#222'; ctx.lineWidth=cellSize/30; ctx.stroke();
         ctx.beginPath(); ctx.arc(0,cellSize/7,cellSize/4,0,Math.PI,false); ctx.strokeStyle='#fff'; ctx.lineWidth=cellSize/18; ctx.stroke();
         ctx.restore();
       }
@@ -1013,30 +1490,9 @@
         link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
       });
 
-      // Track page visits for achievements
-      trackPageVisit(sectionId);
-
       // Handle home extras
       if (typeof showHomeExtras === 'function') {
         showHomeExtras(sectionId === 'home');
-      }
-    }
-
-    // Track page visits for achievements
-    function trackPageVisit(sectionId) {
-      const visitAchievements = {
-        'home': 'visitHome',
-        'sponsors': 'visitSponsors', 
-        'media': 'visitMedia',
-        'blog': 'visitBlog',
-        'games': 'visitGames',
-        'achievements': 'visitAchievements',
-        'dashboard': 'visitDashboard'
-      };
-      
-      const achievementId = visitAchievements[sectionId];
-      if (achievementId) {
-        unlockAchievement(achievementId);
       }
     }
 
@@ -1072,7 +1528,6 @@
   
   // Initialize everything when the page loads
   document.addEventListener('DOMContentLoaded', () => {
-    loadAchievements(); // Load saved achievements
     setupThunderAudio();
     setupNavigation();
     
@@ -1133,14 +1588,7 @@
     setTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
     themeToggle.onclick = () => {
       const current = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
-      const newTheme = current === 'dark' ? 'light' : 'dark';
-      setTheme(newTheme);
-      // Unlock achievement for theme switching
-      unlockAchievement('themeSwitch');
-      // Unlock achievement for activating light mode
-      if (newTheme === 'light') {
-        unlockAchievement('myEyes');
-      }
+      setTheme(current === 'dark' ? 'light' : 'dark');
     };
     // Fallback: ensure accessibility toolbar is always visible
     setTimeout(() => {
@@ -1176,71 +1624,6 @@
   // Steam-style Achievements
   let achievementsEnabled = localStorage.getItem('achievementsEnabled') !== 'false';
   const achievementsToggle = document.getElementById('achievements-toggle');
-  
-  // Load achievements from localStorage
-  function loadAchievements() {
-    const saved = localStorage.getItem('steelSurgeAchievements');
-    if (saved) {
-      try {
-        const savedAchievements = JSON.parse(saved);
-        achievementsData.forEach(achievement => {
-          const saved = savedAchievements.find(s => s.id === achievement.id);
-          if (saved) {
-            achievement.unlocked = saved.unlocked;
-          }
-        });
-      } catch (e) {
-        console.log('Error loading achievements:', e);
-      }
-    }
-  }
-  
-  // Save achievements to localStorage
-  function saveAchievements() {
-    localStorage.setItem('steelSurgeAchievements', JSON.stringify(achievementsData));
-  }
-  
-  // Achievements data
-  const achievementsData = [
-    // Visible achievements (new ones)
-    { id: 'visitHome', name: 'Hello World!', desc: 'Visit the Homepage', icon: '🏠', unlocked: false },
-    { id: 'visitSponsors', name: 'Our Beloved Supporters', desc: 'Visit the Sponsors page', icon: '🤝', unlocked: false },
-    { id: 'visitMedia', name: 'Trending', desc: 'Visit the Media page', icon: '📺', unlocked: false },
-    { id: 'visitBlog', name: 'Breaking News!', desc: 'Visit the Blog page', icon: '📰', unlocked: false },
-    { id: 'visitGames', name: 'Surge\'s Arcade', desc: 'Visit the Games page', icon: '🎮', unlocked: false },
-    { id: 'visitAchievements', name: 'Overachiever', desc: 'Visit the Achievements page', icon: '🏆', unlocked: false },
-    { id: 'visitDashboard', name: 'Historian', desc: 'Visit the Team Info page', icon: '📊', unlocked: false },
-    { id: 'shocking', name: 'Shocking', desc: 'Tap Surge the Robot', icon: '⚡', unlocked: false },
-    { id: 'zap', name: 'Zap!', desc: 'Surge gets struck by lightning', icon: '⚡', unlocked: false },
-    { id: 'myEyes', name: 'My Eyes!', desc: 'Activate Light Mode', icon: '☀️', unlocked: false },
-    
-    // Game-specific achievements
-    { id: 'amazing', name: 'A-maze-ing!', desc: 'Complete Surge Maze', icon: '🧩', unlocked: false },
-    { id: 'surgeMan', name: 'Surge-Man', desc: 'Play Pac-Man: Surge Edition', icon: '👻', unlocked: false },
-    { id: 'canWeBuildIt', name: 'Can we Build It?', desc: 'Play Robot Builder', icon: '🔧', unlocked: false },
-    { id: 'photographicMemory', name: 'Photographic Memory', desc: 'Play Memory Circuit', icon: '🧠', unlocked: false },
-    
-    // Hidden achievements (medal ones)
-    { id: 'firstClick', name: 'First Click', desc: 'Click the robot for the first time', icon: '👆', unlocked: false, hidden: true },
-    { id: 'tenClicks', name: 'Click Master', desc: 'Click the robot 10 times', icon: '🔟', unlocked: false, hidden: true },
-    { id: 'playMaze', name: 'Maze Runner', desc: 'Play the Surge Maze game', icon: '🧩', unlocked: false, hidden: true },
-    { id: 'playPacman', name: 'Pac-Man Pro', desc: 'Play Pac-Man: Surge Edition', icon: '👻', unlocked: false, hidden: true },
-    { id: 'builder', name: 'Robot Builder', desc: 'Play the Robot Builder game', icon: '🔧', unlocked: false, hidden: true },
-    { id: 'memory', name: 'Memory Master', desc: 'Play the Memory Circuit game', icon: '🧠', unlocked: false, hidden: true },
-    { id: 'themeSwitch', name: 'Theme Changer', desc: 'Switch between light and dark themes', icon: '🌓', unlocked: false, hidden: true },
-    
-    // Team achievements
-    { id: 'motivateAward', name: 'Motivate Award', desc: 'Inspire others through outreach', icon: '💪', unlocked: false, hidden: true },
-    { id: 'connectNom', name: 'Connect Award', desc: 'Connect with the community', icon: '🌐', unlocked: false, hidden: true },
-    { id: 'inspireAward', name: 'Inspire Award', desc: 'Inspire the next generation', icon: '✨', unlocked: false, hidden: true },
-    { id: 'controlAward', name: 'Control Award', desc: 'Master robot control systems', icon: '🎮', unlocked: false, hidden: true },
-    { id: 'thinkTop3', name: 'Think Award', desc: 'Top 3 in Think Award', icon: '🧠', unlocked: false, hidden: true },
-    { id: 'stateQual', name: 'State Qualifier', desc: 'Qualify for State Championship', icon: '🏅', unlocked: false, hidden: true },
-    { id: 'top5Area', name: 'Top 5 Area', desc: 'Top 5 in Area Championship', icon: '🥇', unlocked: false, hidden: true },
-    { id: 'perfectJournal', name: 'Perfect Journal', desc: 'Maintain perfect engineering notebook', icon: '📝', unlocked: false, hidden: true },
-    { id: 'worlds', name: 'Worlds Qualifier', desc: 'Qualify for World Championship', icon: '🌍', unlocked: false, hidden: true }
-  ];
-  
   if (achievementsToggle) {
     achievementsToggle.checked = achievementsEnabled;
     achievementsToggle.addEventListener('change', () => {
@@ -1249,60 +1632,11 @@
       renderAchievements();
     });
   }
-  function showAchievementPopup(achievement) {
-    // Create achievement popup
-    const popup = document.createElement('div');
-    popup.style.position = 'fixed';
-    popup.style.top = '20px';
-    popup.style.right = '20px';
-    popup.style.background = 'linear-gradient(135deg, #1e3a8a, #3b82f6)';
-    popup.style.color = '#fff';
-    popup.style.padding = '1rem 1.5rem';
-    popup.style.borderRadius = '0.75rem';
-    popup.style.boxShadow = '0 10px 25px rgba(0,0,0,0.3)';
-    popup.style.zIndex = '10000';
-    popup.style.display = 'flex';
-    popup.style.alignItems = 'center';
-    popup.style.gap = '1rem';
-    popup.style.minWidth = '300px';
-    popup.style.maxWidth = '400px';
-    popup.style.transform = 'translateX(100%)';
-    popup.style.transition = 'transform 0.3s ease-out';
-    popup.style.border = '2px solid #38bdf8';
-    
-    popup.innerHTML = `
-      <div style="font-size: 2rem;">${achievement.icon}</div>
-      <div>
-        <div style="font-weight: bold; font-size: 1.1rem; margin-bottom: 0.25rem;">Achievement Unlocked!</div>
-        <div style="font-size: 1rem; color: #e2e8f0;">${achievement.name}</div>
-        <div style="font-size: 0.9rem; color: #cbd5e1;">${achievement.desc}</div>
-      </div>
-    `;
-    
-    document.body.appendChild(popup);
-    
-    // Animate in
-    setTimeout(() => {
-      popup.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Auto remove after 4 seconds
-    setTimeout(() => {
-      popup.style.transform = 'translateX(100%)';
-      setTimeout(() => {
-        if (popup.parentNode) {
-          popup.parentNode.removeChild(popup);
-        }
-      }, 300);
-    }, 4000);
-  }
-
   function unlockAchievement(id) {
     if (!achievementsEnabled) return;
     const a = achievementsData.find(a => a.id === id);
     if (a && !a.unlocked) {
       a.unlocked = true;
-      saveAchievements(); // Save to localStorage
       renderAchievements();
       // Show popup if enabled
       if (achievementsEnabled) showAchievementPopup(a);
@@ -1316,9 +1650,6 @@
     if (!achievementsEnabled) return;
     list.innerHTML = '';
     achievementsData.forEach(a => {
-      // Skip hidden achievements
-      if (a.hidden) return;
-      
       const card = document.createElement('div');
       card.className = 'achievement-card';
       card.style.background = a.unlocked ? 'rgba(56,189,248,0.15)' : 'rgba(30,41,59,0.7)';
@@ -1392,15 +1723,12 @@
     muteBtn.style.borderRadius = '0.7rem';
     muteBtn.style.cursor = 'pointer';
     muteBtn.style.zIndex = '10001';
-    muteBtn.style.transition = 'transform 0.2s';
-    muteBtn.onmouseenter = () => muteBtn.style.transform = 'scale(1.12)';
-    muteBtn.onmouseleave = () => muteBtn.style.transform = 'scale(1)';
-    modal.appendChild(muteBtn);
     muteBtn.onclick = () => {
       isMuted = !isMuted;
       music.muted = isMuted;
       muteBtn.innerHTML = isMuted ? '🔇' : '🔊';
     };
+    modal.appendChild(muteBtn);
     // Close button
     modal.innerHTML += `<button onclick="this.parentElement.remove();window.__activeGameCleanup&&window.__activeGameCleanup();" style="position:absolute;top:2rem;right:2rem;background:#222;color:#fff;font-size:1.5rem;padding:0.5rem 1.2rem;border:none;border-radius:0.7rem;cursor:pointer;z-index:10001;">✕</button>`;
     let container = document.createElement('div');
@@ -1413,6 +1741,7 @@
     container.style.alignItems = 'center';
     container.style.justifyContent = 'center';
     container.style.minWidth = '320px';
+    container.style.minHeight = '320px';
     container.style.maxWidth = '90vw';
     container.style.maxHeight = '80vh';
     container.style.overflow = 'auto';
@@ -1422,31 +1751,27 @@
       modal.appendChild(container);
       document.body.appendChild(modal);
       if (window.__activeGameCleanup) window.__activeGameCleanup();
-        window.__activeGameCleanup = () => { try { music.pause(); music.src = ''; } catch(e){} };
-        setTimeout(() => startPacmanGameHD(document.getElementById('surge-maze-modal')), 0);
-        // Unlock achievement for playing maze game
-        unlockAchievement('amazing');
-        window.__activeGameCleanup = () => {
-          let c = document.getElementById('surge-maze-canvas');
-          if (c) c.remove();
-          try { music.pause(); music.src = ''; } catch(e){}
-        };
-        return;
+      window.__activeGameCleanup = () => { try { music.pause(); music.src = ''; } catch(e){} };
+      setTimeout(() => startPacmanGameHD(document.getElementById('surge-maze-modal')), 0);
+      window.__activeGameCleanup = () => {
+        let c = document.getElementById('surge-maze-canvas');
+        if (c) c.remove();
+        try { music.pause(); music.src = ''; } catch(e){}
+      };
+      return;
     } else if (game === 'pacman') {
       container.innerHTML = `<h2 style='color:#fbbf24'>Pac-Man: Surge Edition</h2><div id='pacman-modal'></div>`;
       modal.appendChild(container);
       document.body.appendChild(modal);
       if (window.__activeGameCleanup) window.__activeGameCleanup();
-        window.__activeGameCleanup = () => { try { music.pause(); music.src = ''; } catch(e){} };
-        setTimeout(() => startPacmanGame(document.getElementById('pacman-modal')), 0);
-        // Unlock achievement for playing pacman game
-        unlockAchievement('surgeMan');
-        window.__activeGameCleanup = () => {
-          let c = document.getElementById('pacman-canvas');
-          if (c) c.remove();
-          try { music.pause(); music.src = ''; } catch(e){}
-        };
-        return;
+      window.__activeGameCleanup = () => { try { music.pause(); music.src = ''; } catch(e){} };
+      setTimeout(() => startPacmanGameHD(document.getElementById('pacman-modal')), 0);
+      window.__activeGameCleanup = () => {
+        let c = document.getElementById('pacman-canvas');
+        if (c) c.remove();
+        try { music.pause(); music.src = ''; } catch(e){}
+      };
+      return;
     }
     // For other games, show spinner and delay
     container.innerHTML = `<div id='game-loading-spinner' style='color:#38bdf8;font-size:2rem;text-align:center;'><svg width='48' height='48' viewBox='0 0 48 48' style='margin-bottom:1rem;'><circle cx='24' cy='24' r='20' stroke='#38bdf8' stroke-width='4' fill='none' stroke-dasharray='31.4 31.4' stroke-linecap='round'><animateTransform attributeName='transform' type='rotate' from='0 24 24' to='360 24 24' dur='1s' repeatCount='indefinite'/></circle></svg><div>Loading...</div></div>`;
@@ -1458,22 +1783,18 @@
       window.__activeGameCleanup = () => { try { music.pause(); music.src = ''; } catch(e){} };
       if (game === 'robot-builder') {
         container.innerHTML = `<h2 style='color:#7c3aed'>Robot Builder</h2><div id='robot-builder-modal'></div>`;
-          setTimeout(() => {
-            startRobotBuilderGame(document.getElementById('robot-builder-modal'));
-            // Unlock achievement for playing robot builder game
-            unlockAchievement('canWeBuildIt');
-            window.__activeGameCleanup = () => {
-              let c = document.getElementById('robot-builder-canvas');
-              if (c) c.remove();
-              try { music.pause(); music.src = ''; } catch(e){}
-            };
-          }, 50);
+        setTimeout(() => {
+          startRobotBuilderGame(document.getElementById('robot-builder-modal'));
+          window.__activeGameCleanup = () => {
+            let c = document.getElementById('robot-builder-canvas');
+            if (c) c.remove();
+            try { music.pause(); music.src = ''; } catch(e){}
+          };
+        }, 50);
       } else if (game === 'memory-circuit') {
         container.innerHTML = `<h2 style='color:#0ea5e9'>Memory Circuit</h2><div id='memory-circuit-modal'></div>`;
         setTimeout(() => {
           startMemoryCircuitGame(document.getElementById('memory-circuit-modal'));
-          // Unlock achievement for playing memory circuit game
-          unlockAchievement('photographicMemory');
           window.__activeGameCleanup = () => {
             let c = document.getElementById('memory-circuit-canvas');
             if (c) c.remove();
@@ -1484,7 +1805,7 @@
     }, 10);
   }
   // Lightweight Robot Builder game
-  window.startRobotBuilderGame = function(container) {
+  function startRobotBuilderGame(container) {
     container.innerHTML = `<canvas id='robot-builder-canvas' width='400' height='320' style='background:#181f2e;border-radius:1rem;box-shadow:0 0 24px #7c3aed;width:100%;max-width:400px;max-height:60vw;outline:none;'></canvas><div style='color:#fff;margin-top:1rem;'>Drag the parts to build your robot!</div>`;
     const canvas = container.querySelector('#robot-builder-canvas');
     const ctx = canvas.getContext('2d');
@@ -1531,7 +1852,7 @@
     canvas.onmouseleave = () => { dragging=null; };
   }
   // Lightweight Memory Circuit game
-  window.startMemoryCircuitGame = function(container) {
+  function startMemoryCircuitGame(container) {
     container.innerHTML = `<canvas id='memory-circuit-canvas' width='400' height='320' style='background:#181f2e;border-radius:1rem;box-shadow:0 0 24px #0ea5e9;width:100%;max-width:400px;max-height:60vw;outline:none;'></canvas><div style='color:#fff;margin-top:1rem;'>Flip the cards to match all pairs!</div>`;
     const canvas = container.querySelector('#memory-circuit-canvas');
     const ctx = canvas.getContext('2d');
@@ -1585,11 +1906,182 @@
     };
   }
 
+  // --- Achievements Data and Popup ---
+  const achievementsData = [
+    { id: 'firstClick', name: 'First Click!', desc: 'You clicked Surge for the first time.', icon: '👆', unlocked: false },
+    { id: 'tenClicks', name: 'Click Master', desc: 'You clicked Surge 10 times!', icon: '🔟', unlocked: false },
+    { id: 'playMaze', name: 'Maze Runner', desc: 'You played Surge Maze.', icon: '🌀', unlocked: false },
+    { id: 'playPacman', name: 'Pac-Maniac', desc: 'You played Pac-Man: Surge Edition.', icon: '🟡', unlocked: false },
+    { id: 'builder', name: 'Robot Builder', desc: 'You built a robot in Robot Builder.', icon: '🤖', unlocked: false },
+    { id: 'memory', name: 'Circuit Memory', desc: 'You played Memory Circuit.', icon: '💾', unlocked: false },
+    { id: 'themeSwitch', name: 'Theme Switcher', desc: 'You toggled the site theme.', icon: '🌓', unlocked: false },
+    // New team achievements (least to greatest difficulty)
+    { id: 'motivateAward', name: 'Motivate Award Winner', desc: 'Win the Motivate Award at a qualifier.', icon: '🏅', unlocked: false },
+    { id: 'connectNom', name: 'Connect Award Nominee', desc: 'Be nominated for the Connect Award.', icon: '🤝', unlocked: false },
+    { id: 'inspireAward', name: 'Inspire Award Winner', desc: 'Win the Inspire Award.', icon: '🏆', unlocked: false },
+    { id: 'controlAward', name: 'Control Award Winner', desc: 'Receive the Control Award.', icon: '🎮', unlocked: false },
+    { id: 'thinkTop3', name: 'Think Award Top 3', desc: 'Place in top 3 for Think Award at State Championship.', icon: '📓', unlocked: false },
+    { id: 'stateQual', name: 'State Championship Qualifier', desc: 'Qualify for the State Championship.', icon: '🎫', unlocked: false },
+    { id: 'top5Area', name: 'Top 5 in Area', desc: 'Be ranked in the top 5 teams in our area.', icon: '🥇', unlocked: false },
+    { id: 'perfectJournal', name: 'Perfect Journal Review', desc: 'Receive a perfect journal review.', icon: '📝', unlocked: false },
+    { id: 'worlds', name: 'Worlds Qualifier', desc: 'Advance to Worlds.', icon: '🌎', unlocked: false },
+  ];
+  function showAchievementPopup(a) {
+    const popup = document.createElement('div');
+    popup.style.position = 'fixed';
+    popup.style.bottom = '40px';
+    popup.style.right = '40px';
+    popup.style.background = 'rgba(30,41,59,0.97)';
+    popup.style.color = '#38bdf8';
+    popup.style.padding = '1.2rem 2rem';
+    popup.style.borderRadius = '1.2rem';
+    popup.style.boxShadow = '0 2px 12px #38bdf8';
+    popup.style.fontFamily = 'Orbitron, sans-serif';
+    popup.style.fontSize = '1.2rem';
+    popup.style.zIndex = '10003';
+    popup.style.display = 'flex';
+    popup.style.alignItems = 'center';
+    popup.style.gap = '1.2rem';
+    popup.innerHTML = `<span style="font-size:2.5rem;">${a.icon}</span> <span><b>${a.name}</b><br><span style='font-size:1rem;color:#f1f5f9;'>${a.desc}</span></span>`;
+    document.body.appendChild(popup);
+    setTimeout(() => { popup.style.opacity = '0'; popup.style.transition = 'opacity 0.7s'; }, 2200);
+    setTimeout(() => { popup.remove(); }, 3000);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // ... existing code ...
+    // Sponsors
+    document.querySelectorAll('.sponsors-grid img').forEach((img, i) => {
+      const unsplash = [
+        'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&w=400&q=80',
+      ];
+      img.src = unsplash[i % unsplash.length];
+    });
+    // Pit tour images
+    const pitImgs = document.querySelectorAll('#pit-tour-grid img');
+    const pitUnsplash = [
+      'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80', // Robot
+      'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80', // Field
+      'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80', // Team Station
+    ];
+    pitImgs.forEach((img, i) => { img.src = pitUnsplash[i % pitUnsplash.length]; });
+  });
+
+  // --- Maze Game ---
+  function startMazeGame(container) {
+    // Simple Maze Game with Random Maze Generation
+    container.innerHTML = `<canvas id="surge-maze-canvas" tabindex="0" aria-label="Surge Maze Game" style="background:#030711;border-radius:1rem;box-shadow:0 0 24px #38bdf8;width:100%;max-width:600px;max-height:80vw;outline:none;"></canvas>\n<div id="surge-maze-ui" style="color:#fff;text-align:center;margin-top:1rem;"></div>`;
+    const canvas = container.querySelector('#surge-maze-canvas');
+    const ctx = canvas.getContext('2d');
+    // Responsive sizing
+    function resizeCanvas() {
+      let w = Math.min(600, window.innerWidth * 0.95);
+      let h = Math.min(500, window.innerHeight * 0.7);
+      canvas.width = w;
+      canvas.height = h;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    // Maze generation (recursive backtracking)
+    const MAZE_ROWS = 15, MAZE_COLS = 21;
+    function generateMaze(rows, cols) {
+      let maze = Array.from({length: rows}, () => Array(cols).fill(0));
+      function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } }
+      function carve(x, y) {
+        maze[y][x] = 1;
+        let dirs = [[0,-2],[2,0],[0,2],[-2,0]];
+        shuffle(dirs);
+        for (const [dx, dy] of dirs) {
+          let nx = x + dx, ny = y + dy;
+          if (ny > 0 && ny < rows && nx > 0 && nx < cols && maze[ny][nx] === 0) {
+            maze[y + dy/2][x + dx/2] = 1;
+            carve(nx, ny);
+          }
+        }
+      }
+      carve(1, 1);
+      maze[1][1] = 1; // Start
+      maze[rows-2][cols-2] = 1; // Exit
+      return maze;
+    }
+    let maze = generateMaze(MAZE_ROWS, MAZE_COLS);
+    let cellSize = Math.min(canvas.width / MAZE_COLS, canvas.height / MAZE_ROWS);
+    let player = {x: 1, y: 1};
+    let exit = {x: MAZE_COLS-2, y: MAZE_ROWS-2};
+    let gameOver = false;
+    function drawMaze() {
+      for (let y = 0; y < MAZE_ROWS; y++) for (let x = 0; x < MAZE_COLS; x++) {
+        if (maze[y][x] === 0) {
+          ctx.fillStyle = '#0ea5e9';
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+      }
+      ctx.save();
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(exit.x * cellSize + cellSize/2, exit.y * cellSize + cellSize/2, cellSize/3, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+    function drawSurge(px, py) {
+      ctx.save();
+      ctx.translate(px * cellSize + cellSize/2, py * cellSize + cellSize/2);
+      ctx.beginPath();
+      ctx.arc(0, 0, cellSize/2-2, 0, Math.PI*2);
+      ctx.fillStyle = '#38bdf8';
+      ctx.shadowColor = '#7c3aed';
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.beginPath(); ctx.arc(-cellSize/5,-cellSize/6,cellSize/8,0,Math.PI*2); ctx.arc(cellSize/5,-cellSize/6,cellSize/8,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+      ctx.beginPath(); ctx.arc(-cellSize/5,-cellSize/7,cellSize/20,0,Math.PI); ctx.arc(cellSize/5,-cellSize/7,cellSize/20,0,Math.PI); ctx.strokeStyle='#222'; ctx.lineWidth=cellSize/30; ctx.stroke();
+      ctx.beginPath(); ctx.arc(0,cellSize/7,cellSize/4,0,Math.PI,false); ctx.strokeStyle='#fff'; ctx.lineWidth=cellSize/18; ctx.stroke();
+      ctx.restore();
+    }
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      cellSize = Math.min(canvas.width / MAZE_COLS, canvas.height / MAZE_ROWS);
+      drawMaze();
+      drawSurge(player.x, player.y);
+    }
+    function canMove(x, y) {
+      return maze[y] && maze[y][x] === 1;
+    }
+    function movePlayer(dx, dy) {
+      if (canMove(player.x + dx, player.y + dy)) {
+        player.x += dx; player.y += dy;
+        if (player.x === exit.x && player.y === exit.y) {
+          gameOver = true;
+          showEndScreen();
+        }
+      }
+    }
+    function showEndScreen() {
+      const ui = container.querySelector('#surge-maze-ui');
+      ui.innerHTML = `<h3 style='color:#38bdf8'>You Win! Surge escaped the maze!</h3><button id='play-again-btn' style='margin:1rem 0.5rem 0 0;background:#38bdf8;color:#030711;font-weight:bold;font-size:1.1rem;padding:0.6rem 2rem;border:none;border-radius:0.7rem;cursor:pointer;'>Play Again</button><button id='close-game-btn' style='margin:1rem 0 0 0.5rem;background:#222;color:#fff;font-size:1.1rem;padding:0.6rem 2rem;border:none;border-radius:0.7rem;cursor:pointer;'>Close</button>`;
+      document.getElementById('play-again-btn').onclick = () => { startMazeGame(container); };
+      document.getElementById('close-game-btn').onclick = () => { container.parentElement.parentElement.remove(); };
+    }
+    canvas.focus();
+    canvas.setAttribute('role','application');
+    canvas.setAttribute('aria-label','Surge Maze Game');
+    canvas.addEventListener('keydown', function handler(e) {
+      if (gameOver) return;
+      if(['ArrowUp','w','W'].includes(e.key)) movePlayer(0, -1);
+      else if(['ArrowDown','s','S'].includes(e.key)) movePlayer(0, 1);
+      else if(['ArrowLeft','a','A'].includes(e.key)) movePlayer(-1, 0);
+      else if(['ArrowRight','d','D'].includes(e.key)) movePlayer(1, 0);
+      draw();
+    });
+    draw();
+    const ui = container.querySelector('#surge-maze-ui');
+    ui.innerHTML = `<b>Goal:</b> Help Surge reach the yellow exit!`;
+  }
+
   // --- Pac-Man: Surge Edition ---
-  window.startPacmanGame = function(container) {
-    // Define speeds for player and ghosts
-    const PLAYER_SPEED = 0.13;
-    const GHOST_SPEED = 0.10;
+  function startPacmanGame(container) {
     // FULL Classic Pac-Man: Surge Edition (production-quality, themed)
     container.innerHTML = `
       <canvas id="pacman-canvas" tabindex="0" aria-label="Pac-Man: Surge Edition" style="background:#181f2e;border-radius:1rem;box-shadow:0 0 24px #38bdf8;width:100%;max-width:560px;max-height:90vw;outline:none;display:block;margin:auto;position:relative;z-index:1;pointer-events:auto;"></canvas>
@@ -1600,43 +2092,7 @@
     canvas.setAttribute('tabindex', '0');
     canvas.focus();
     // If canvas loses focus, refocus on click
-    canvas.addEventListener('click', () => {
-      canvas.focus();
-      console.log('Canvas clicked and focused');
-    });
-    
-    // Add direct canvas keyboard listener as backup
-    canvas.addEventListener('keydown', (e) => {
-      console.log('Canvas keydown event:', e.key);
-      if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","w","W","s","S","a","A","d","D"].includes(e.key)) {
-        e.preventDefault();
-        if (!gameOver && player.alive) {
-          switch(e.key) {
-            case 'ArrowUp':
-            case 'w':
-            case 'W':
-              player.nextDir = {x:0, y:-1}; 
-              break;
-            case 'ArrowDown':
-            case 's':
-            case 'S':
-              player.nextDir = {x:0, y:1}; 
-              break;
-            case 'ArrowLeft':
-            case 'a':
-            case 'A':
-              player.nextDir = {x:-1, y:0}; 
-              break;
-            case 'ArrowRight':
-            case 'd':
-            case 'D':
-              player.nextDir = {x:1, y:0}; 
-              break;
-          }
-          console.log('Canvas key pressed:', e.key, 'Next direction:', player.nextDir);
-        }
-      }
-    });
+    canvas.addEventListener('click', () => canvas.focus());
     // --- Game Constants ---
     const ROWS = 31;
     const COLS = 28;
@@ -1644,7 +2100,7 @@
     let H = Math.min(620, window.innerHeight * 0.85);
     canvas.width = W;
     canvas.height = H;
-    let CELL = Math.min(canvas.width / COLS, canvas.height / ROWS);
+    const CELL = Math.min(canvas.width / COLS, canvas.height / ROWS);
     window.addEventListener('resize', () => {
       W = Math.min(560, window.innerWidth * 0.98);
       H = Math.min(620, window.innerHeight * 0.85);
@@ -1674,7 +2130,7 @@
       [0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0],
       [0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0],
       [0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0],
-      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+      [0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
       [0,1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0],
       [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -1708,24 +2164,6 @@
     for (let row of maze) for (let cell of row) if (cell === 1) dots++;
     let gameOver = false;
     // --- Drawing Functions ---
-    function drawWall(x, y) {
-      ctx.save();
-      ctx.fillStyle = '#0ea5e9';
-      ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
-      
-      // Add some depth to the walls
-      ctx.strokeStyle = '#0284c7';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(x * CELL, y * CELL, CELL, CELL);
-      
-      // Add inner highlight
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x * CELL + 2, y * CELL + 2, CELL - 4, CELL - 4);
-      
-      ctx.restore();
-    }
-    
     function drawWrench(x, y) {
       ctx.save();
       const centerX = x * CELL + CELL / 2;
@@ -2146,8 +2584,8 @@
             g.dir = {x:0, y:0};
           } else {
             // Player is not powered up - game over
-          player.alive = false;
-          gameOver = true;
+            player.alive = false;
+            gameOver = true;
             console.log('Game Over!');
             return; // Exit early since game is over
           }
@@ -2161,37 +2599,20 @@
       
       // Keyboard input
       window.addEventListener('keydown', (e) => {
-        // Only handle keys if Pac-Man canvas is present and game is active
+        // Only handle keys if Pac-Man canvas is present
         const pacmanCanvas = document.getElementById('pacman-canvas');
-        if (pacmanCanvas && pacmanCanvas.style.display !== 'none') {
-          // Handle arrow keys and WASD for movement
-          if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","w","W","s","S","a","A","d","D"].includes(e.key)) {
+        if (pacmanCanvas && pacmanCanvas.offsetParent !== null) {
+          // Handle arrow keys for movement
+          if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
             e.preventDefault();
             // Only process movement if game is not over
             if (!gameOver && player.alive) {
               switch(e.key) {
-                case 'ArrowUp':
-                case 'w':
-                case 'W':
-                  player.nextDir = {x:0, y:-1}; 
-                  break;
-                case 'ArrowDown':
-                case 's':
-                case 'S':
-                  player.nextDir = {x:0, y:1}; 
-                  break;
-                case 'ArrowLeft':
-                case 'a':
-                case 'A':
-                  player.nextDir = {x:-1, y:0}; 
-                  break;
-                case 'ArrowRight':
-                case 'd':
-                case 'D':
-                  player.nextDir = {x:1, y:0}; 
-                  break;
+                case 'ArrowUp': player.nextDir = {x:0, y:-1}; break;
+                case 'ArrowDown': player.nextDir = {x:0, y:1}; break;
+                case 'ArrowLeft': player.nextDir = {x:-1, y:0}; break;
+                case 'ArrowRight': player.nextDir = {x:1, y:0}; break;
               }
-              console.log('Key pressed:', e.key, 'Next direction:', player.nextDir);
             }
           } 
         }
@@ -2381,11 +2802,6 @@
       // Always continue the game loop for input handling
       requestAnimationFrame(gameLoop);
     }
-    
-    // Start the game loop
-    console.log('Starting Pac-Man game...');
-    console.log('Canvas size:', canvas.width, 'x', canvas.height);
-    console.log('CELL size:', CELL);
     gameLoop();
     const ui = container.querySelector('#pacman-ui');
     ui.innerHTML = `<b>Goal:</b> Collect all the lightning bolts and avoid the ghosts!<br><span style='color:#7c3aed'>Eat a big lightning bolt to power up and chase the ghosts!<br>Collect the wrench for bonus points!</span><br><span style='color:#fbbf24'>Use arrow keys or WASD to move</span>`;
